@@ -44,12 +44,8 @@ class EventsViewModel(
             when (events) {
                 is ResultWrapper.Success ->
                     eventsListLiveData.value = eventsMapper.map(events.value)
-                is ResultWrapper.NetworkError -> {
-                    errorMutableLiveData.value = "Network error"
-                }
-                is ResultWrapper.GenericError -> {
-                    errorMutableLiveData.value = "code: ${events.code}, error: ${events.error}"
-                }
+                is ResultWrapper.NetworkError -> errorMutableLiveData.value = events.toString()
+                is ResultWrapper.GenericError -> errorMutableLiveData.value = events.toString()
             }
             isProgressLiveData.value = false
         }

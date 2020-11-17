@@ -12,7 +12,7 @@ sealed class ResultWrapper<out T : Any> {
 
     override fun toString(): String {
         return when (this) {
-            is Success<*> -> "Success[data=$value]"
+            is Success -> "Success[data=$value]"
             is GenericError -> "GenericError[code: $code, error: $error]"
             is NetworkError -> "HttpError[IOException]"
         }
