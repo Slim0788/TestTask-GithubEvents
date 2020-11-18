@@ -1,1 +1,1 @@
-# This is the test task Ginhub Events
+# This is the test task Github Events
