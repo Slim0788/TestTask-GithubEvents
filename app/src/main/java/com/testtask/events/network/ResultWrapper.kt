@@ -1,8 +1,8 @@
 package com.testtask.events.network
 
-sealed class ResultWrapper<out T : Any> {
+sealed class ResultWrapper<out T> {
 
-    data class Success<out T:Any>(val value: T) : ResultWrapper<T>()
+    data class Success<out T>(val value: T) : ResultWrapper<T>()
     data class GenericError(
         val code: Int? = null,
         val error: Error? = null

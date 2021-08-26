@@ -1,13 +1,13 @@
 package com.testtask.events.ui
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.testtask.events.R
 import com.testtask.events.databinding.ActivityEventsBinding
 import com.testtask.events.dependency.Dependencies
@@ -15,30 +15,27 @@ import com.testtask.events.dependency.Dependencies
 class EventsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEventsBinding
-    private lateinit var viewModel: EventsViewModel
-    private lateinit var eventsAdapter: EventsAdapter
 
+    private val eventsAdapter = EventsAdapter(emptyList())
+
+    private val viewModel: EventsViewModel by viewModels {
+        EventsViewModelFactory(
+            Dependencies.eventsRepository,
+            Dependencies.eventsMapper
+        )
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_events)
-        viewModel = ViewModelProvider(
-            this,
-            EventsViewModelFactory(
-                Dependencies.eventsRepository,
-                Dependencies.eventsMapper
-            )
-        ).get(EventsViewModel::class.java)
-
-        eventsAdapter = EventsAdapter(emptyList())
 
         binding.apply {
             lifecycleOwner = this@EventsActivity
             viewmodel = viewModel
 
             refreshLayout.apply {
-                setOnRefreshListener {
-                    updateData()
-                }
+                setOnRefreshListener { updateData() }
                 setColorSchemeResources(
                     android.R.color.holo_blue_dark,
                     android.R.color.holo_green_light,
@@ -58,26 +55,19 @@ class EventsActivity : AppCompatActivity() {
         }
 
         viewModel.apply {
-            eventsList.observe(this@EventsActivity, Observer { items ->
+            eventsList.observe(this@EventsActivity) { items ->
                 eventsAdapter.items = items
                 eventsAdapter.notifyDataSetChanged()
-            })
-            error.observe(this@EventsActivity, Observer { errorMessage ->
+            }
+            error.observe(this@EventsActivity) { errorMessage ->
                 Toast.makeText(this@EventsActivity, errorMessage, Toast.LENGTH_LONG).show()
-            })
+            }
         }
 
-        if (savedInstanceState == null) {
-            getData()
-        }
     }
 
     private fun updateData() {
         viewModel.updateEvents()
-    }
-
-    private fun getData() {
-        viewModel.getEvents()
     }
 
     private fun openCustomTub(url: String) {

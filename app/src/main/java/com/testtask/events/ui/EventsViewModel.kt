@@ -26,7 +26,7 @@ class EventsViewModel(
     val isProgress: LiveData<Boolean> = isProgressLiveData
     val error: LiveData<String> = errorMutableLiveData
 
-    fun getEvents() {
+    init {
         getData()
     }
 
@@ -42,8 +42,8 @@ class EventsViewModel(
                 eventsRepository.getData()
             }
             when (events) {
-                is ResultWrapper.Success ->
-                    eventsListLiveData.value = eventsMapper.map(events.value)
+                is ResultWrapper.Success -> eventsListLiveData.value =
+                    eventsMapper.map(events.value)
                 is ResultWrapper.NetworkError -> errorMutableLiveData.value = events.toString()
                 is ResultWrapper.GenericError -> errorMutableLiveData.value = events.toString()
             }

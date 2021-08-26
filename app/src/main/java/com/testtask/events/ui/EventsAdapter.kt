@@ -37,10 +37,10 @@ class EventsAdapter(var items: List<Event>) :
     inner class ViewHolder(private val binding: ActivityEventsItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind() {
-            binding.model = items[adapterPosition]
+            binding.model = items[absoluteAdapterPosition]
 
             itemView.setOnClickListener {
-                onItemClickListener?.invoke(items[adapterPosition])
+                onItemClickListener?.invoke(items[absoluteAdapterPosition])
             }
         }
     }

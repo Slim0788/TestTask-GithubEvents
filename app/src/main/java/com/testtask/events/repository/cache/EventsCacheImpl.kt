@@ -2,8 +2,9 @@ package com.testtask.events.repository.cache
 
 import com.testtask.events.api.dto.ResponseDto
 import com.testtask.events.db.ResponseDao
+import java.util.concurrent.TimeUnit
 
-private const val EXPIRATION_TIME = (10 * 60 * 1000).toLong() // 10 minutes
+private val EXPIRATION_TIME = TimeUnit.MINUTES.toMillis(10)
 
 class EventsCacheImpl constructor(
     private val responseDao: ResponseDao,

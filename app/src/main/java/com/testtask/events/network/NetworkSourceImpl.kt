@@ -6,7 +6,7 @@ import java.io.IOException
 
 class NetworkSourceImpl : NetworkSource {
 
-    override suspend fun <T : Any> safeApiCall(apiCall: suspend () -> T): ResultWrapper<T> {
+    override suspend fun <T> safeApiCall(apiCall: suspend () -> T): ResultWrapper<T> {
         return try {
             ResultWrapper.Success(apiCall.invoke())
         } catch (throwable: Throwable) {
